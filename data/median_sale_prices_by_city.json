@@ -1,0 +1,110 @@
+[
+  {
+    "city": "Urbana",
+    "state": "IL",
+    "sales_count": 1131,
+    "median_sale_price": 229900
+  },
+  {
+    "city": "Champaign",
+    "state": "IL",
+    "sales_count": 2286,
+    "median_sale_price": 240000.0
+  },
+  {
+    "city": "Lafayette",
+    "state": "IN",
+    "sales_count": 3057,
+    "median_sale_price": 260000
+  },
+  {
+    "city": "Iowa City",
+    "state": "IA",
+    "sales_count": 1909,
+    "median_sale_price": 342000
+  },
+  {
+    "city": "Gainesville",
+    "state": "FL",
+    "sales_count": 5477,
+    "median_sale_price": 350000
+  },
+  {
+    "city": "Athens",
+    "state": "GA",
+    "sales_count": 2813,
+    "median_sale_price": 370000
+  },
+  {
+    "city": "West Lafayette",
+    "state": "IN",
+    "sales_count": 1559,
+    "median_sale_price": 379900
+  },
+  {
+    "city": "Savoy",
+    "state": "IL",
+    "sales_count": 247,
+    "median_sale_price": 402700
+  },
+  {
+    "city": "Madison",
+    "state": "WI",
+    "sales_count": 5061,
+    "median_sale_price": 421000
+  },
+  {
+    "city": "State College",
+    "state": "PA",
+    "sales_count": 1350,
+    "median_sale_price": 430000.0
+  },
+  {
+    "city": "Newberry",
+    "state": "FL",
+    "sales_count": 152,
+    "median_sale_price": 439995.0
+  },
+  {
+    "city": "Ann Arbor",
+    "state": "MI",
+    "sales_count": 3020,
+    "median_sale_price": 571000.0
+  },
+  {
+    "city": "Carrboro",
+    "state": "NC",
+    "sales_count": 208,
+    "median_sale_price": 601250.0
+  },
+  {
+    "city": "Middleton",
+    "state": "WI",
+    "sales_count": 645,
+    "median_sale_price": 611000
+  },
+  {
+    "city": "Charlottesville",
+    "state": "VA",
+    "sales_count": 2774,
+    "median_sale_price": 615000.0
+  },
+  {
+    "city": "Chapel Hill",
+    "state": "NC",
+    "sales_count": 2716,
+    "median_sale_price": 735000.0
+  },
+  {
+    "city": "Pittsboro",
+    "state": "NC",
+    "sales_count": 92,
+    "median_sale_price": 876985.5
+  },
+  {
+    "city": "Davis",
+    "state": "CA",
+    "sales_count": 941,
+    "median_sale_price": 889000
+  }
+]
