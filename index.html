@@ -55,28 +55,24 @@
   <script>
     const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
     const formatPrice = value => money.format(Math.round(value));
-    fetch('data/median_sale_prices_by_city.json')
-      .then(response => { if (!response.ok) throw new Error('Could not load the city price data.'); return response.json(); })
-      .then(rows => {
-        const max = Math.max(...rows.map(row => row.median_sale_price));
-        const chart = document.querySelector('#chart');
-        const tbody = document.querySelector('#results');
-        rows.forEach(row => {
-          const label = `${row.city}, ${row.state}`;
-          const line = document.createElement('div');
-          line.className = 'bar-row';
-          line.setAttribute('aria-label', `${label}: ${formatPrice(row.median_sale_price)}`);
-          const place = document.createElement('span'); place.className = 'place'; place.textContent = label;
-          const track = document.createElement('span'); track.className = 'track'; track.setAttribute('aria-hidden', 'true');
-          const bar = document.createElement('span'); bar.className = 'bar'; bar.style.width = `${row.median_sale_price / max * 100}%`; track.append(bar);
-          const price = document.createElement('span'); price.className = 'price'; price.textContent = formatPrice(row.median_sale_price);
-          line.append(place, track, price); chart.append(line);
-          const tr = document.createElement('tr');
-          for (const value of [row.city, row.state, formatPrice(row.median_sale_price)]) { const td = document.createElement('td'); td.textContent = value; tr.append(td); }
-          tbody.append(tr);
-        });
-      })
-      .catch(error => { document.querySelector('#chart').textContent = error.message; });
+    const rows = [{"city":"Urbana","state":"IL","sales_count":1131,"median_sale_price":229900},{"city":"Champaign","state":"IL","sales_count":2286,"median_sale_price":240000.0},{"city":"Lafayette","state":"IN","sales_count":3057,"median_sale_price":260000},{"city":"Iowa City","state":"IA","sales_count":1909,"median_sale_price":342000},{"city":"Gainesville","state":"FL","sales_count":5477,"median_sale_price":350000},{"city":"Athens","state":"GA","sales_count":2813,"median_sale_price":370000},{"city":"West Lafayette","state":"IN","sales_count":1559,"median_sale_price":379900},{"city":"Savoy","state":"IL","sales_count":247,"median_sale_price":402700},{"city":"Madison","state":"WI","sales_count":5061,"median_sale_price":421000},{"city":"State College","state":"PA","sales_count":1350,"median_sale_price":430000.0},{"city":"Newberry","state":"FL","sales_count":152,"median_sale_price":439995.0},{"city":"Ann Arbor","state":"MI","sales_count":3020,"median_sale_price":571000.0},{"city":"Carrboro","state":"NC","sales_count":208,"median_sale_price":601250.0},{"city":"Middleton","state":"WI","sales_count":645,"median_sale_price":611000},{"city":"Charlottesville","state":"VA","sales_count":2774,"median_sale_price":615000.0},{"city":"Chapel Hill","state":"NC","sales_count":2716,"median_sale_price":735000.0},{"city":"Pittsboro","state":"NC","sales_count":92,"median_sale_price":876985.5},{"city":"Davis","state":"CA","sales_count":941,"median_sale_price":889000}];
+    const max = Math.max(...rows.map(row => row.median_sale_price));
+    const chart = document.querySelector('#chart');
+    const tbody = document.querySelector('#results');
+    rows.forEach(row => {
+      const label = `${row.city}, ${row.state}`;
+      const line = document.createElement('div');
+      line.className = 'bar-row';
+      line.setAttribute('aria-label', `${label}: ${formatPrice(row.median_sale_price)}`);
+      const place = document.createElement('span'); place.className = 'place'; place.textContent = label;
+      const track = document.createElement('span'); track.className = 'track'; track.setAttribute('aria-hidden', 'true');
+      const bar = document.createElement('span'); bar.className = 'bar'; bar.style.width = `${row.median_sale_price / max * 100}%`; track.append(bar);
+      const price = document.createElement('span'); price.className = 'price'; price.textContent = formatPrice(row.median_sale_price);
+      line.append(place, track, price); chart.append(line);
+      const tr = document.createElement('tr');
+      for (const value of [row.city, row.state, formatPrice(row.median_sale_price)]) { const td = document.createElement('td'); td.textContent = value; tr.append(td); }
+      tbody.append(tr);
+    });
   </script>
 </body>
 </html>
