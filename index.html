@@ -1,31 +1,82 @@
 <!DOCTYPE html>
-<!-- A placeholder from the Home Sales template. Replace this file with your site's first page. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Under construction</title>
-  <!-- An empty icon, so the browser doesn't log an error looking for favicon.ico -->
+  <meta name="description" content="Median home sale prices in 18 college towns, computed from completed sales.">
+  <title>Home prices in college towns</title>
   <link rel="icon" href="data:,">
   <style>
-    :root { color-scheme: light dark; }
-    body {
-      max-width: 40rem;
-      margin: 0 auto;
-      padding: 3rem 1rem;
-      font-family: system-ui, sans-serif;
-      line-height: 1.5;
-    }
-    footer { margin-top: 3rem; font-size: 0.875rem; opacity: 0.75; }
+    :root { color-scheme: light; --ink: #182b32; --muted: #586b70; --paper: #f7f5ef; --accent: #146b62; --line: #d9ded8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+    main { width: min(100% - 2rem, 68rem); margin: 0 auto; padding: 3.5rem 0 4rem; }
+    .eyebrow { margin: 0 0 .75rem; color: var(--accent); font-size: .78rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { max-width: 13ch; margin: 0; font: 600 clamp(2.6rem, 7vw, 5rem)/.98 Georgia, serif; letter-spacing: -.045em; }
+    .intro { max-width: 42rem; margin: 1.25rem 0 2.5rem; color: var(--muted); font-size: 1.1rem; }
+    .panel { padding: clamp(1rem, 4vw, 2.25rem); border: 1px solid var(--line); border-radius: 1.25rem; background: #fffefa; box-shadow: 0 12px 35px #243b3010; }
+    .panel h2 { margin: 0; font: 600 1.65rem Georgia, serif; }
+    .panel-note { margin: .3rem 0 1.5rem; color: var(--muted); font-size: .9rem; }
+    #chart { display: grid; gap: .75rem; }
+    .bar-row { display: grid; grid-template-columns: minmax(8.5rem, 12rem) minmax(4rem, 1fr) minmax(6.5rem, 8rem); gap: .8rem; align-items: center; }
+    .place { overflow: hidden; font-size: .88rem; font-weight: 620; text-overflow: ellipsis; white-space: nowrap; }
+    .track { height: 1.2rem; overflow: hidden; border-radius: 99px; background: #edf0e9; }
+    .bar { height: 100%; min-width: 2px; border-radius: inherit; background: var(--accent); }
+    .price { text-align: right; font-size: .86rem; font-variant-numeric: tabular-nums; font-weight: 680; }
+    .table-wrap { margin-top: 2rem; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    caption { padding: 0 0 .7rem; text-align: left; font: 600 1.3rem Georgia, serif; }
+    th, td { padding: .72rem .5rem; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
+    td:last-child, th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    footer { margin-top: 1.5rem; color: var(--muted); font-size: .85rem; }
+    @media (max-width: 520px) { main { padding-top: 2.25rem; } .bar-row { grid-template-columns: minmax(6.8rem, 1fr) minmax(2.5rem, 1.1fr) minmax(5.8rem, auto); gap: .45rem; } .place, .price { font-size: .76rem; } }
   </style>
 </head>
 <body>
   <main>
-    <h1>This site is under construction</h1>
-    <p>It will show findings from the College-town home sales dataset.</p>
+    <p class="eyebrow">College-town home sales · 2026</p>
+    <h1>What homes sell for near campus</h1>
+    <p class="intro">A look at the typical sale price across 18 college towns. The median gives the middle sale price in each place, so unusually high or low prices have less influence.</p>
+    <section class="panel" aria-labelledby="chart-title">
+      <h2 id="chart-title">Median sale price by city</h2>
+      <p class="panel-note">18 places · dollar labels rounded to the nearest whole dollar</p>
+      <div id="chart" role="img" aria-label="Horizontal bar chart of median home sale prices by city, lowest to highest"></div>
+      <div class="table-wrap">
+        <table>
+          <caption>Every city</caption>
+          <thead><tr><th scope="col">City</th><th scope="col">State</th><th scope="col">Median sale price</th></tr></thead>
+          <tbody id="results"></tbody>
+        </table>
+      </div>
+      <footer><p>Median sale price is calculated from completed sales of $1,000 or more. The dataset contains some implausible prices; the $1,000 cutoff excludes the documented sales below that amount. Each city’s median is rounded to the nearest whole dollar for display.</p><p>Source: College-town home sales dataset, version 1.0 (2026). Data collected March 2026.</p></footer>
+    </section>
   </main>
-  <footer>
-    <p>Data: College-town home sales dataset, version 1.0 (2026). University of Illinois-Deloitte Foundation Center for Business Emerging Technologies. Data collected March 2026.</p>
-  </footer>
+  <script>
+    const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const formatPrice = value => money.format(Math.round(value));
+    fetch('data/median_sale_prices_by_city.json')
+      .then(response => { if (!response.ok) throw new Error('Could not load the city price data.'); return response.json(); })
+      .then(rows => {
+        const max = Math.max(...rows.map(row => row.median_sale_price));
+        const chart = document.querySelector('#chart');
+        const tbody = document.querySelector('#results');
+        rows.forEach(row => {
+          const label = `${row.city}, ${row.state}`;
+          const line = document.createElement('div');
+          line.className = 'bar-row';
+          line.setAttribute('aria-label', `${label}: ${formatPrice(row.median_sale_price)}`);
+          const place = document.createElement('span'); place.className = 'place'; place.textContent = label;
+          const track = document.createElement('span'); track.className = 'track'; track.setAttribute('aria-hidden', 'true');
+          const bar = document.createElement('span'); bar.className = 'bar'; bar.style.width = `${row.median_sale_price / max * 100}%`; track.append(bar);
+          const price = document.createElement('span'); price.className = 'price'; price.textContent = formatPrice(row.median_sale_price);
+          line.append(place, track, price); chart.append(line);
+          const tr = document.createElement('tr');
+          for (const value of [row.city, row.state, formatPrice(row.median_sale_price)]) { const td = document.createElement('td'); td.textContent = value; tr.append(td); }
+          tbody.append(tr);
+        });
+      })
+      .catch(error => { document.querySelector('#chart').textContent = error.message; });
+  </script>
 </body>
 </html>
