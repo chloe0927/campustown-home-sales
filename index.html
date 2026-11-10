@@ -59,7 +59,7 @@
     const max = Math.max(...rows.map(row => row.median_sale_price));
     const chart = document.querySelector('#chart');
     const tbody = document.querySelector('#results');
-    rows.forEach(row => {
+    [...rows].reverse().forEach(row => {
       const label = `${row.city}, ${row.state}`;
       const line = document.createElement('div');
       line.className = 'bar-row';
